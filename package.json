@@ -1,0 +1,35 @@
+{
+   "name": "easy-api",
+   "version": "1.0.0",
+   "main": "server.js",
+   "author": "Muhammad Pauzi",
+   "license": "MIT",
+   "scripts": {
+      "start": "ts-node src/index.ts",
+      "ts:build": "tsc",
+      "ts:dev": "nodemon --exec ts-node src/server.ts",
+      "ts:start": "ts-node src/server.ts",
+      "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js",
+      "ts:init": "tsc --init"
+   },
+   "devDependencies": {
+      "@types/bcrypt": "^5.0.0",
+      "@types/express": "^4.17.13",
+      "@types/node": "^8.0.29",
+      "nodemon": "^2.0.15",
+      "ts-node": "3.3.0",
+      "typescript": "3.3.3333"
+   },
+   "dependencies": {
+      "bcrypt": "^5.0.1",
+      "class-validator": "^0.13.2",
+      "cookie-parser": "^1.4.6",
+      "cors": "^2.8.5",
+      "dotenv": "^16.0.0",
+      "express": "^4.17.2",
+      "jsonwebtoken": "^8.5.1",
+      "mysql": "^2.14.1",
+      "reflect-metadata": "^0.1.10",
+      "typeorm": "0.2.41"
+   }
+}
