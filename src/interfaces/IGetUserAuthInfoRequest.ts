@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export interface IGetUserAuthInfoRequest extends Request {
-    user: {
+    user?: {
         id: string | number;
         username: string;
     };
