@@ -1,6 +1,9 @@
 import { Request, Response } from 'express';
+import { compare } from 'bcrypt';
 import {
     CREDENTIALS_MESSAGE,
+    USER_ALREADY_EXISTS,
+    USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,
     USER_HAS_BEEN_SUCESSFULLY_LOGGED_IN,
 } from '../constants/messages';
 import ApiResponse from '../helpers/ApiResponse';
@@ -40,8 +43,9 @@ export default class AuthController {
                     password,
                 },
             });
+            const isSame = await compare(password, user.password);
             // username or password are not registered on database
-            if (!user)
+            if (!user || !isSame)
                 return Error.handleValidationError(res, {
                     message: 'Whoops! Something went wrong.',
                     errors: [CREDENTIALS_MESSAGE],
@@ -72,6 +76,38 @@ export default class AuthController {
                 user: {
                     id: user.id,
                     username: user.username,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+            return Error.handleError(res, error);
+        }
+    }
+
+    public async register(req: Request, res: Response) {
+        try {
+            const { username, password } = req.body;
+            let user = await this.authRepository.getUser({
+                where: {
+                    username,
+                },
+            });
+
+            if (user)
+                return ApiResponse.errorResponse(res, 409, {
+                    message: USER_ALREADY_EXISTS,
+                });
+
+            const createdUser = await this.authRepository.createUser({
+                username,
+                password,
+            });
+
+            return ApiResponse.successCreatedResponse(res, {
+                message: USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,
+                user: {
+                    id: createdUser.id,
+                    username: createdUser.username,
                 },
             });
         } catch (error) {

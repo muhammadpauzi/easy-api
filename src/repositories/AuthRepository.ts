@@ -40,4 +40,19 @@ export default class AuthRepository {
             }
         });
     }
+
+    public createUser(data: Object): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await User.insert(data);
+                resolve(user);
+            } catch (error: any) {
+                reject({
+                    code: SERVER_ERROR_CODE,
+                    statusCode: SERVER_ERROR_CODE,
+                    message: error.message,
+                });
+            }
+        });
+    }
 }
