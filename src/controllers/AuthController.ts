@@ -3,6 +3,7 @@ import { compare } from 'bcrypt';
 import {
     CREDENTIALS_MESSAGE,
     USER_ALREADY_EXISTS,
+    USER_HAS_BEEN_SUCCESSFULLY_LOGGED_OUT,
     USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,
     USER_HAS_BEEN_SUCESSFULLY_LOGGED_IN,
 } from '../constants/messages';
@@ -53,8 +54,8 @@ export default class AuthController {
 
             // for securing jwt -> pzn video php jwt ngobar
             const sessionId = await StringHelper.getRandomKey();
-            user = this.authRepository.updateSessionIdByUsername(
-                user.username,
+            user = this.authRepository.updateSessionIdBy(
+                { username: user.username },
                 sessionId
             );
 
@@ -112,6 +113,25 @@ export default class AuthController {
             });
         } catch (error) {
             console.log(error);
+            return Error.handleError(res, error);
+        }
+    }
+
+    public async logout(req: IGetUserAuthInfoRequest, res: Response) {
+        try {
+            const { id } = req.user;
+            // reset sessionId of the user
+            await this.authRepository.updateSessionIdBy(
+                { id: Number(id) },
+                null
+            );
+            // reset token in cookie
+            res.cookie('token', '');
+
+            return ApiResponse.successResponse(res, {
+                message: USER_HAS_BEEN_SUCCESSFULLY_LOGGED_OUT,
+            });
+        } catch (error) {
             return Error.handleError(res, error);
         }
     }

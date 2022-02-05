@@ -10,6 +10,9 @@ export const USER_ALREADY_EXISTS = 'Username already registered';
 export const USER_HAS_BEEN_SUCCESSFULLY_REGISTERED =
     'Your account has been successfully registered';
 
+export const USER_HAS_BEEN_SUCCESSFULLY_LOGGED_OUT =
+    'You have been successfully logged out';
+
 export const CREDENTIALS_MESSAGE =
     "Username and password doesn't match, Please try again";
 

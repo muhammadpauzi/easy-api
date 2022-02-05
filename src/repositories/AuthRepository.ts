@@ -1,6 +1,6 @@
 import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
-import { FindOneOptions } from 'typeorm';
+import { FindConditions, FindOneOptions } from 'typeorm';
 
 export default class AuthRepository {
     public getUser(options: FindOneOptions): Promise<any> {
@@ -18,18 +18,15 @@ export default class AuthRepository {
         });
     }
 
-    public updateSessionIdByUsername(
-        username: string,
-        sessionId: string
+    public updateSessionIdBy(
+        where: FindConditions<User>,
+        sessionId: string | null
     ): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                let user = await User.update(
-                    { username },
-                    {
-                        sessionId,
-                    }
-                );
+                let user = await User.update(where, {
+                    sessionId,
+                });
                 resolve(user);
             } catch (error: any) {
                 reject({
