@@ -1,5 +1,8 @@
-import { Request } from 'express'
+import { Request } from 'express';
 
 export interface IGetUserAuthInfoRequest extends Request {
-    user: string | Object
+    user: {
+        id: string | number;
+        username: string;
+    };
 }
