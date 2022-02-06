@@ -13,6 +13,8 @@ export const USER_HAS_BEEN_SUCCESSFULLY_REGISTERED =
 export const USER_HAS_BEEN_SUCCESSFULLY_LOGGED_OUT =
     'You have been successfully logged out';
 
+export const SOMETHING_WENT_WRONG = 'Whoops! Something went wrong';
+
 export const CREDENTIALS_MESSAGE =
     "Username and password doesn't match, Please try again";
 

@@ -1,4 +1,5 @@
 import express, { Application, Router } from 'express';
+import { ConnectionOptions } from 'typeorm';
 import Database from './databases/Database';
 
 export default class App {

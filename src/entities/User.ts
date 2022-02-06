@@ -16,12 +16,13 @@ export default class User extends BaseModel {
     @Column({ type: 'varchar', length: 255, nullable: false })
     password!: string;
 
-    @Column({ type: 'varchar', length: 20, nullable: true })
+    @Column({ type: 'varchar', length: 50, nullable: true })
     sessionId!: string | null;
 
     @BeforeInsert()
     public async hashPassword() {
         const salt = await genSalt();
         this.password = await hash(this.password, salt);
+        console.log(this.name, this.password);
     }
 }

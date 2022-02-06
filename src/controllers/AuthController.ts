@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { compare } from 'bcrypt';
 import {
     CREDENTIALS_MESSAGE,
+    SOMETHING_WENT_WRONG,
     USER_ALREADY_EXISTS,
     USER_HAS_BEEN_SUCCESSFULLY_LOGGED_OUT,
     USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,
@@ -41,23 +42,26 @@ export default class AuthController {
             let user = await this.authRepository.getUser({
                 where: {
                     username,
-                    password,
                 },
             });
-            const isSame = await compare(password, user.password);
+
+            const isSame = user
+                ? await compare(password, user.password)
+                : false;
             // username or password are not registered on database
             if (!user || !isSame)
                 return Error.handleValidationError(res, {
-                    message: 'Whoops! Something went wrong.',
+                    message: SOMETHING_WENT_WRONG,
                     errors: [CREDENTIALS_MESSAGE],
                 });
 
             // for securing jwt -> pzn video php jwt ngobar
             const sessionId = await StringHelper.getRandomKey();
-            user = this.authRepository.updateSessionIdBy(
-                { username: user.username },
+            user = await this.authRepository.updateSessionIdBy(
+                { where: { username: user.username } },
                 sessionId
             );
+            console.log(user);
 
             const payload = await sign(
                 {
@@ -87,11 +91,17 @@ export default class AuthController {
 
     public async register(req: Request, res: Response) {
         try {
-            const { username, password } = req.body;
+            const { username, name, password, email } = req.body;
+
             let user = await this.authRepository.getUser({
-                where: {
-                    username,
-                },
+                where: [
+                    {
+                        username,
+                    },
+                    {
+                        email,
+                    },
+                ],
             });
 
             if (user)
@@ -101,6 +111,8 @@ export default class AuthController {
 
             const createdUser = await this.authRepository.createUser({
                 username,
+                name,
+                email,
                 password,
             });
 
@@ -109,6 +121,8 @@ export default class AuthController {
                 user: {
                     id: createdUser.id,
                     username: createdUser.username,
+                    name: createdUser.name,
+                    email: createdUser.email,
                 },
             });
         } catch (error) {
@@ -122,7 +136,7 @@ export default class AuthController {
             const { id } = req.user;
             // reset sessionId of the user
             await this.authRepository.updateSessionIdBy(
-                { id: Number(id) },
+                { where: { id: Number(id) } },
                 null
             );
             // reset token in cookie

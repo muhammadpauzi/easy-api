@@ -1,4 +1,4 @@
-import { createConnection, Connection } from 'typeorm';
+import { createConnection, Connection, ConnectionOptions } from 'typeorm';
 
 export default class Database {
     private connection!: Connection;
@@ -12,7 +12,7 @@ export default class Database {
             } catch (error) {
                 reject(error);
             }
-        })
+        });
     }
 
     private setConnection(connection: Connection) {

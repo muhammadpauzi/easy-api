@@ -8,31 +8,31 @@ export default class AuthRepository {
             try {
                 const user = await User.findOne(options);
                 resolve(user);
-            } catch (error: any) {
+            } catch ({ message }) {
                 reject({
                     code: SERVER_ERROR_CODE,
                     statusCode: SERVER_ERROR_CODE,
-                    message: error.message,
+                    message,
                 });
             }
         });
     }
 
     public updateSessionIdBy(
-        where: FindConditions<User>,
+        options: FindOneOptions,
         sessionId: string | null
     ): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                let user = await User.update(where, {
-                    sessionId,
-                });
+                let user = await this.getUser(options);
+                user.sessionId = sessionId;
+                user = await user.save();
                 resolve(user);
-            } catch (error: any) {
+            } catch ({ code, message }) {
                 reject({
-                    code: SERVER_ERROR_CODE,
+                    code: code,
                     statusCode: SERVER_ERROR_CODE,
-                    message: error.message,
+                    message,
                 });
             }
         });
@@ -41,13 +41,14 @@ export default class AuthRepository {
     public createUser(data: Object): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                let user = await User.insert(data);
+                let user = await User.create(data);
+                user = await user.save();
                 resolve(user);
-            } catch (error: any) {
+            } catch ({ message }) {
                 reject({
                     code: SERVER_ERROR_CODE,
                     statusCode: SERVER_ERROR_CODE,
-                    message: error.message,
+                    message,
                 });
             }
         });
