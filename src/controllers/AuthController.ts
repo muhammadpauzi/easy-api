@@ -92,7 +92,6 @@ export default class AuthController {
     public async register(req: Request, res: Response) {
         try {
             const { username, name, password, email } = req.body;
-
             let user = await this.authRepository.getUser({
                 where: [
                     {

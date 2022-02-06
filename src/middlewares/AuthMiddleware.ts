@@ -10,6 +10,7 @@ import {
     NO_TOKEN_PROVIDED,
     NO_USER_WITH_THE_TOKEN,
     SERVER_ERROR,
+    SOMETHING_WENT_WRONG,
     THE_USER_ALREADY_LOGGED_IN,
     THE_USER_ALREADY_LOGGED_OUT,
     TOKEN_NOT_VALID,
@@ -18,6 +19,7 @@ import User from '../entities/User';
 import ApiResponse from '../helpers/ApiResponse';
 import Error from '../helpers/Error';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
+import ValidationHelper from '../helpers/ValidationHelper';
 
 export default class AuthMiddleware {
     public async verifyJwtToken(
@@ -102,6 +104,20 @@ export default class AuthMiddleware {
         } catch (error) {
             console.log(error);
             if (error instanceof JsonWebTokenError) return next();
+            return Error.handleError(res, error);
+        }
+    }
+
+    public async validateUser(req: Request, res: Response, next: NextFunction) {
+        try {
+            const errors = await ValidationHelper.validateData(User, req.body);
+            if (errors === true) return next();
+            return Error.handleValidationError(res, {
+                message: SOMETHING_WENT_WRONG,
+                errors,
+            });
+        } catch (error) {
+            console.log(error);
             return Error.handleError(res, error);
         }
     }

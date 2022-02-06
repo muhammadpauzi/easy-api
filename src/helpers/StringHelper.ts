@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { VALIDATION_ERROR_MESSAGES } from '../constants/messages';
 
 export default class StringHelper {
     public static getRandomKey(
@@ -12,4 +13,8 @@ export default class StringHelper {
             });
         });
     }
+
+    public static upperCaseFirstLetterOfSentence = (string: string): string => {
+        return string[0].toUpperCase() + string.substr(1, string.length);
+    };
 }

@@ -19,3 +19,8 @@ export const CREDENTIALS_MESSAGE =
     "Username and password doesn't match, Please try again";
 
 export const SERVER_ERROR = 'SERVER_ERROR';
+
+export const VALIDATION_ERROR_MESSAGES: any = {
+    alpha_num_dash:
+        'The :attribute may only contain letters, numbers, dashes and underscores.',
+};

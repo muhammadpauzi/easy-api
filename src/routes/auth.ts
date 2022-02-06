@@ -5,7 +5,8 @@ import AuthMiddleware from '../middlewares/AuthMiddleware';
 
 const router = Router();
 const authController = new AuthController();
-const { verifyJwtToken, blockLoggedInUser } = new AuthMiddleware();
+const { verifyJwtToken, blockLoggedInUser, validateUser } =
+    new AuthMiddleware();
 
 router.get(
     '/user',
@@ -15,7 +16,7 @@ router.get(
 router.post('/login', blockLoggedInUser, (req, res) =>
     authController.login(req, res)
 );
-router.post('/register', blockLoggedInUser, (req, res) =>
+router.post('/register', validateUser, blockLoggedInUser, (req, res) =>
     authController.register(req, res)
 );
 router.delete(
