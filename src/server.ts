@@ -8,7 +8,8 @@ import authRouter from './routes/auth';
 
 const app = new App();
 
-app.registerMiddleware(express.json())
+app.registerMiddleware(express.json({ limit: '10mb' }))
+    .registerMiddleware(express.urlencoded({ extended: true, limit: '10mb' }))
     .registerRoute('/auth', authRouter)
     .run(5000, (port: number) => {
         console.log('Database connected!');
