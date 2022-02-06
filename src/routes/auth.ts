@@ -1,17 +1,27 @@
 import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
+import AuthMiddleware from '../middlewares/AuthMiddleware';
 
 const router = Router();
 const authController = new AuthController();
+const { verifyJwtToken, blockLoggedInUser } = new AuthMiddleware();
 
-router.get('/user', (req, res) =>
-    authController.user(<IGetUserAuthInfoRequest>req, res)
+router.get(
+    '/user',
+    (req, ...args) => verifyJwtToken(<IGetUserAuthInfoRequest>req, ...args),
+    (req, res) => authController.user(<IGetUserAuthInfoRequest>req, res)
 );
-router.post('/login', (req, res) => authController.login(req, res));
-router.post('/register', (req, res) => authController.register(req, res));
-router.delete('/logout', (req, res) =>
-    authController.logout(<IGetUserAuthInfoRequest>req, res)
+router.post('/login', blockLoggedInUser, (req, res) =>
+    authController.login(req, res)
+);
+router.post('/register', blockLoggedInUser, (req, res) =>
+    authController.register(req, res)
+);
+router.delete(
+    '/logout',
+    (req, ...args) => verifyJwtToken(<IGetUserAuthInfoRequest>req, ...args),
+    (req, res) => authController.logout(<IGetUserAuthInfoRequest>req, res)
 );
 
 export default router;

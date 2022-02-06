@@ -3,6 +3,7 @@ dotenv.config();
 import App from './App';
 import 'reflect-metadata';
 import express from 'express';
+import cookieParser from 'cookie-parser';
 
 import authRouter from './routes/auth';
 
@@ -10,6 +11,7 @@ const app = new App();
 
 app.registerMiddleware(express.json({ limit: '10mb' }))
     .registerMiddleware(express.urlencoded({ extended: true, limit: '10mb' }))
+    .registerMiddleware(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY))
     .registerRoute('/auth', authRouter)
     .run(5000, (port: number) => {
         console.log('Database connected!');

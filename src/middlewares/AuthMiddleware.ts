@@ -4,8 +4,8 @@ import {
     Secret,
     JwtPayload,
     JsonWebTokenError,
-} from 'jsonwebtoken'
-import { Request, Response, NextFunction } from 'express'
+} from 'jsonwebtoken';
+import { Request, Response, NextFunction } from 'express';
 import {
     NO_TOKEN_PROVIDED,
     NO_USER_WITH_THE_TOKEN,
@@ -13,11 +13,11 @@ import {
     THE_USER_ALREADY_LOGGED_IN,
     THE_USER_ALREADY_LOGGED_OUT,
     TOKEN_NOT_VALID,
-} from '../constants/messages'
-import User from '../entities/User'
-import ApiResponse from '../helpers/ApiResponse'
-import Error from '../helpers/Error'
-import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest'
+} from '../constants/messages';
+import User from '../entities/User';
+import ApiResponse from '../helpers/ApiResponse';
+import Error from '../helpers/Error';
+import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
 
 export default class AuthMiddleware {
     public async verifyJwtToken(
@@ -30,45 +30,45 @@ export default class AuthMiddleware {
             if (!req.cookies.token)
                 return ApiResponse.errorUnauthorizedResponse(res, {
                     message: NO_TOKEN_PROVIDED,
-                })
-            const { token: jwtToken } = req.cookies
+                });
+            const { token: jwtToken } = req.cookies;
 
             const decodedToken: JwtPayload = <JwtPayload>(
                 verify(jwtToken, <Secret>process.env.JWT_SECRET_KEY)
-            )
+            );
 
             const user = await User.findOne({
                 where: {
                     id: decodedToken.user.id,
                 },
-            })
+            });
 
             if (!user)
                 return ApiResponse.errorResponse(res, 404, {
                     message: NO_USER_WITH_THE_TOKEN,
-                })
+                });
 
             if (!user.sessionId)
                 return ApiResponse.errorUnauthorizedResponse(res, {
                     message: THE_USER_ALREADY_LOGGED_OUT,
-                })
+                });
 
             req.user = {
                 id: user.id,
                 username: user.username,
-            }
-            next()
+            };
+            next();
         } catch (error) {
-            console.log(error)
+            console.log(error);
             if (error instanceof TokenExpiredError)
                 return ApiResponse.errorUnauthorizedResponse(res, {
                     message: NO_TOKEN_PROVIDED,
-                })
+                });
             if (error instanceof JsonWebTokenError)
                 return ApiResponse.errorUnauthorizedResponse(res, {
                     message: TOKEN_NOT_VALID,
-                })
-            return Error.handleError(res, error)
+                });
+            return Error.handleError(res, error);
         }
     }
 
@@ -78,31 +78,31 @@ export default class AuthMiddleware {
         next: NextFunction
     ) {
         try {
-            if (!req.cookies.token) return next()
+            if (!req.cookies.token) return next();
 
-            const { token: jwtToken } = req.cookies
+            const { token: jwtToken } = req.cookies;
             try {
                 const decodedToken: JwtPayload = <JwtPayload>(
                     verify(jwtToken, <Secret>process.env.JWT_SECRET_KEY)
-                )
+                );
 
                 const user = await User.findOne({
                     where: {
                         id: decodedToken.user.id,
                     },
-                })
+                });
 
-                if (user && user?.sessionId) {
+                if (user && user.sessionId) {
                     return ApiResponse.errorResponse(res, 403, {
                         message: THE_USER_ALREADY_LOGGED_IN,
-                    })
+                    });
                 }
-                return next() // user not exists on db or jwt error must be run next() function
+                return next(); // user not exists on db or jwt error must be run next() function
             } catch (error) {}
         } catch (error) {
-            console.log(error)
-            if (error instanceof JsonWebTokenError) return next()
-            return Error.handleError(res, error)
+            console.log(error);
+            if (error instanceof JsonWebTokenError) return next();
+            return Error.handleError(res, error);
         }
     }
 }
