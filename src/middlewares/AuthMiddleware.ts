@@ -61,7 +61,6 @@ export default class AuthMiddleware {
             };
             next();
         } catch (error) {
-            console.log(error);
             if (error instanceof TokenExpiredError)
                 return ApiResponse.errorUnauthorizedResponse(res, {
                     message: NO_TOKEN_PROVIDED,
@@ -102,7 +101,6 @@ export default class AuthMiddleware {
                 return next(); // user not exists on db or jwt error must be run next() function
             } catch (error) {}
         } catch (error) {
-            console.log(error);
             if (error instanceof JsonWebTokenError) return next();
             return Error.handleError(res, error);
         }
@@ -117,7 +115,6 @@ export default class AuthMiddleware {
                 errors,
             });
         } catch (error) {
-            console.log(error);
             return Error.handleError(res, error);
         }
     }

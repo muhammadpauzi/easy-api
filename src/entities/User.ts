@@ -48,6 +48,5 @@ export default class User extends BaseModel {
     public async hashPassword() {
         const salt = await genSalt();
         this.password = await hash(this.password, salt);
-        console.log(this.name, this.password);
     }
 }

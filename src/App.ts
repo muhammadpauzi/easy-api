@@ -1,5 +1,4 @@
 import express, { Application, Router } from 'express';
-import { ConnectionOptions } from 'typeorm';
 import Database from './databases/Database';
 
 export default class App {
@@ -27,6 +26,7 @@ export default class App {
             this.app.listen(port, () => callback(port));
         } catch (error) {
             console.log(error);
+            process.exit(0);
         }
     }
 }

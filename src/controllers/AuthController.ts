@@ -61,7 +61,6 @@ export default class AuthController {
                 { where: { username: user.username } },
                 sessionId
             );
-            console.log(user);
 
             const payload = await sign(
                 {
@@ -84,7 +83,6 @@ export default class AuthController {
                 },
             });
         } catch (error) {
-            console.log(error);
             return Error.handleError(res, error);
         }
     }
@@ -125,7 +123,6 @@ export default class AuthController {
                 },
             });
         } catch (error) {
-            console.log(error);
             return Error.handleError(res, error);
         }
     }
