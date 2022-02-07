@@ -18,7 +18,7 @@ export default class User extends BaseModel {
     @IsNotEmpty()
     @Matches(/[a-zA-Z0-9_-]/, {
         message: ValidationHelper.getValidationMessage(
-            VALIDATION_ERROR_MESSAGES.alpha_num_dash,
+            VALIDATION_ERROR_MESSAGES.alphaNumDash,
             'username'
         ),
     })

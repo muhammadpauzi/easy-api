@@ -8,9 +8,9 @@ export default class AuthRepository {
             try {
                 const user = await User.findOne(options);
                 resolve(user);
-            } catch ({ message }) {
+            } catch ({ code, message }) {
                 reject({
-                    code: SERVER_ERROR_CODE,
+                    code: code,
                     statusCode: SERVER_ERROR_CODE,
                     message,
                 });
@@ -33,7 +33,7 @@ export default class AuthRepository {
             }
         });
     }
-    
+
     public getUserByUsername(username: string): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
@@ -76,9 +76,9 @@ export default class AuthRepository {
                 let user = await User.create(data);
                 user = await user.save();
                 resolve(user);
-            } catch ({ message }) {
+            } catch ({ code, message }) {
                 reject({
-                    code: SERVER_ERROR_CODE,
+                    code: code,
                     statusCode: SERVER_ERROR_CODE,
                     message,
                 });

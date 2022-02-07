@@ -14,15 +14,16 @@ export default class Blog extends BaseModel {
     @Column({ type: 'varchar', length: 256, nullable: false })
     title!: string;
 
-    @IsNotEmpty()
-    @MaxLength(512)
     @Column({ type: 'varchar', length: 512, nullable: false, unique: true })
     slug!: string;
 
     @IsNotEmpty()
     @Length(50, 10000)
-    @Column({ type: 'text', length: 10000, nullable: false })
+    @Column({ type: 'text', nullable: false })
     body!: string;
+
+    @Column()
+    userId!: number;
 
     @ManyToOne(() => User, (user) => user.blogs, { onDelete: 'CASCADE' })
     user!: User;
@@ -33,7 +34,7 @@ export default class Blog extends BaseModel {
             lower: true,
         });
         const isExists = await Blog.findOne({ where: { slug } });
-        if (isExists) slug = slug + StringHelper.getRandomKey(5, 'hex');
+        if (isExists) slug = slug + (await StringHelper.getRandomKey(2, 'hex'));
         this.slug = slug;
     }
 }

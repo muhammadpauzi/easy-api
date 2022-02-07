@@ -21,6 +21,12 @@ export const CREDENTIALS_MESSAGE =
 export const SERVER_ERROR = 'SERVER_ERROR';
 
 export const VALIDATION_ERROR_MESSAGES: any = {
-    alpha_num_dash:
+    alphaNumDash:
         'The :attribute may only contain letters, numbers, dashes and underscores.',
+};
+
+export const BLOG_MESSAGES = {
+    blogNotFound: 'Blog not found',
+    blogCreated: 'Blog has been successfully created',
+    blogUpdated: 'Blog has been successfully updated',
 };

@@ -12,11 +12,13 @@ export default class Error {
         error: any,
         statusCode: number = SERVER_ERROR_CODE
     ) {
+        console.log('MASUK HANDLE ERROR');
         if (process.env.NODE_ENV === 'development') console.log(error);
         if (error.statusCode) statusCode = error.statusCode;
         const { code, message } = error;
         return ApiResponse.errorResponse(res, statusCode, {
             errorCode: code,
+            statusCode,
             message,
         });
     }
