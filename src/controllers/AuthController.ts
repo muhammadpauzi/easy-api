@@ -25,11 +25,12 @@ export default class AuthController {
     public async user(req: IGetUserAuthInfoRequest, res: Response) {
         try {
             const { id } = req.user;
-            const user = await this.authRepository.getUser({
-                where: {
-                    id,
-                },
-            });
+            const { password, sessionId, ...user } =
+                await this.authRepository.getUser({
+                    where: {
+                        id,
+                    },
+                });
             return ApiResponse.successResponse(res, { data: user });
         } catch (error) {
             return Error.handleError(res, error);
