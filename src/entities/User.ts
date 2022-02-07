@@ -1,4 +1,4 @@
-import { BeforeInsert, Column, Entity } from 'typeorm';
+import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
 import BaseModel from './BaseModel';
 import { genSalt, hash } from 'bcrypt';
 import {
@@ -11,6 +11,7 @@ import {
 } from 'class-validator';
 import ValidationHelper from '../helpers/ValidationHelper';
 import { VALIDATION_ERROR_MESSAGES } from '../constants/messages';
+import Blog from './Blog';
 
 @Entity({ name: 'users' })
 export default class User extends BaseModel {
@@ -43,6 +44,9 @@ export default class User extends BaseModel {
 
     @Column({ type: 'varchar', length: 50, nullable: true })
     sessionId!: string | null;
+
+    @OneToMany(() => Blog, (blog) => blog.user)
+    blogs!: Blog[];
 
     @BeforeInsert()
     public async hashPassword() {

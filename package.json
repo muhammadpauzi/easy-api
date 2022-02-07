@@ -32,6 +32,7 @@
       "jsonwebtoken": "^8.5.1",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
+      "slugify": "^1.6.5",
       "typeorm": "0.2.41"
    }
 }
