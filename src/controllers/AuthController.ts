@@ -26,11 +26,7 @@ export default class AuthController {
         try {
             const { id } = req.user;
             const { password, sessionId, ...user } =
-                await this.authRepository.getUser({
-                    where: {
-                        id,
-                    },
-                });
+                await this.authRepository.getUserById(id);
             return ApiResponse.successResponse(res, { data: user });
         } catch (error) {
             return Error.handleError(res, error);
@@ -40,12 +36,7 @@ export default class AuthController {
     public async login(req: Request, res: Response) {
         try {
             const { username, password } = req.body;
-            let user = await this.authRepository.getUser({
-                where: {
-                    username,
-                },
-            });
-
+            let user = await this.authRepository.getUserByUsername(username);
             const isSame = user
                 ? await compare(password, user.password)
                 : false;

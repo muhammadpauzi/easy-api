@@ -1,6 +1,6 @@
 import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
-import { FindConditions, FindOneOptions } from 'typeorm';
+import { FindOneOptions } from 'typeorm';
 
 export default class AuthRepository {
     public getUser(options: FindOneOptions): Promise<any> {
@@ -14,6 +14,38 @@ export default class AuthRepository {
                     statusCode: SERVER_ERROR_CODE,
                     message,
                 });
+            }
+        });
+    }
+
+    public getUserById(id: string | number): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await this.getUser({
+                    where: {
+                        id,
+                    },
+                });
+                resolve(user);
+            } catch (error) {
+                // this error from this.getUser()
+                reject(error);
+            }
+        });
+    }
+    
+    public getUserByUsername(username: string): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const user = await this.getUser({
+                    where: {
+                        username,
+                    },
+                });
+                resolve(user);
+            } catch (error) {
+                // this error from this.getUser()
+                reject(error);
             }
         });
     }
