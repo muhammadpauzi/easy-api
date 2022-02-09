@@ -25,7 +25,10 @@ export default class Blog extends BaseModel {
     @Column()
     userId!: number;
 
-    @ManyToOne(() => User, (user) => user.blogs, { onDelete: 'CASCADE' })
+    @ManyToOne(() => User, (user) => user.blogs, {
+        onDelete: 'CASCADE',
+        createForeignKeyConstraints: false,
+    })
     user!: User;
 
     @BeforeInsert()

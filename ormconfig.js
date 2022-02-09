@@ -1,12 +1,25 @@
-module.exports = {
+const fs = require('fs');
+
+const isDev = () => {
+    return process.env.NODE_ENV === 'development';
+};
+
+let configs = {
     type: 'mysql',
-    host: 'localhost',
+    host: isDev() ? 'localhost' : process.env.DATABASE_HOST,
     port: 3306,
-    username: process.env.TYPEORM_USERNAME,
-    password: process.env.TYPEORM_PASSWORD,
-    database: process.env.TYPEORM_DATABASE,
+    username: isDev()
+        ? process.env.TYPEORM_USERNAME
+        : process.env.DATABASE_USERNAME,
+    password: isDev()
+        ? process.env.TYPEORM_PASSWORD
+        : process.env.DATABASE_PASSWORD,
+    database: isDev()
+        ? process.env.TYPEORM_DATABASE
+        : process.env.DATABASE_NAME,
+
     synchronize: true,
-    logging: false,
+    logging: true,
     entities: ['src/entities/**/*.ts', 'dist/entities/**/*.js'],
     subscribers: ['src/subscribers/**/*.ts', 'dist/subscribers/**/*.js'],
     migrations: ['src/migrations/**/*.ts', 'dist/migrations/**/*.js'],
@@ -16,3 +29,12 @@ module.exports = {
         subscribersDir: 'src/subscribers',
     },
 };
+
+if (!isDev()) {
+    // if production
+    configs.ssl = {
+        ca: fs.readFileSync(__dirname + '/ssl/cacert.pem'),
+    };
+}
+
+module.exports = configs;
