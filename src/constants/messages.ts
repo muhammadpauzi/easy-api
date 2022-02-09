@@ -25,6 +25,10 @@ export const VALIDATION_ERROR_MESSAGES: any = {
         'The :attribute may only contain letters, numbers, dashes and underscores.',
 };
 
+export const AUTH_MESSAGES = {
+    dontHavePermission: "You don't have any permission to access it",
+};
+
 export const BLOG_MESSAGES = {
     blogNotFound: 'Blog not found',
     blogCreated: 'Blog has been successfully created',

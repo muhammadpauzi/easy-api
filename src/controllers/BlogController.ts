@@ -51,14 +51,20 @@ export default class BlogController {
 
     public async update(req: IGetUserAuthInfoRequest, res: Response) {
         try {
-            const { id } = req.user;
-            req.body.userId = id;
-            const blog = await this.blogRepository.updateBlog(req.body);
+            const { id: userId } = req.user;
+            const { id: blogId } = req.params;
+            const data = {
+                ...req.body,
+                userId,
+                id: blogId,
+            };
+            const blog = await this.blogRepository.updateBlog(data);
             return ApiResponse.successResponse(res, {
                 message: BLOG_MESSAGES.blogUpdated,
                 data: blog,
             });
         } catch (error) {
+            console.log(error);
             return Error.handleError(res, error);
         }
     }

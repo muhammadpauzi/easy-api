@@ -44,7 +44,6 @@ export default class AuthRepository {
                 });
                 resolve(user);
             } catch (error) {
-                // this error from this.getUser()
                 reject(error);
             }
         });
@@ -60,12 +59,8 @@ export default class AuthRepository {
                 user.sessionId = sessionId;
                 user = await user.save();
                 resolve(user);
-            } catch ({ code, message }) {
-                reject({
-                    code: code,
-                    statusCode: SERVER_ERROR_CODE,
-                    message,
-                });
+            } catch (error) {
+                reject(error);
             }
         });
     }
