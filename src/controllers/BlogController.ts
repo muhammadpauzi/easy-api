@@ -64,7 +64,6 @@ export default class BlogController {
                 data: blog,
             });
         } catch (error) {
-            console.log(error);
             return Error.handleError(res, error);
         }
     }

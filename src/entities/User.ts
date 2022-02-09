@@ -53,4 +53,9 @@ export default class User extends BaseModel {
         const salt = await genSalt();
         this.password = await hash(this.password, salt);
     }
+
+    public toJSON() {
+        const { password, ...data } = this;
+        return data;
+    }
 }
