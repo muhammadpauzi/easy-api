@@ -67,7 +67,6 @@ export default class BlogRepository {
         return new Promise(async (resolve, reject) => {
             try {
                 let blog = await this.getBlogWithUserById(data.id);
-                console.log(blog);
                 if (blog.userId != data.userId)
                     return reject({
                         code: FORBIDDEN_CODE,
