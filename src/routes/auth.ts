@@ -2,9 +2,11 @@ import { Router } from 'express';
 import AuthController from '../controllers/AuthController';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
 import AuthMiddleware from '../middlewares/AuthMiddleware';
+import StringMiddleware from '../middlewares/StringMiddleware';
 
 const router = Router();
 const authController = new AuthController();
+const { trimRequestBody } = new StringMiddleware();
 const { verifyJwtToken, blockLoggedInUser, validateUser } =
     new AuthMiddleware();
 
@@ -13,11 +15,15 @@ router.get(
     (req, ...args) => verifyJwtToken(<IGetUserAuthInfoRequest>req, ...args),
     (req, res) => authController.user(<IGetUserAuthInfoRequest>req, res)
 );
-router.post('/login', blockLoggedInUser, (req, res) =>
+router.post('/login', trimRequestBody, blockLoggedInUser, (req, res) =>
     authController.login(req, res)
 );
-router.post('/register', validateUser, blockLoggedInUser, (req, res) =>
-    authController.register(req, res)
+router.post(
+    '/register',
+    trimRequestBody,
+    validateUser,
+    blockLoggedInUser,
+    (req, res) => authController.register(req, res)
 );
 router.delete(
     '/logout',
