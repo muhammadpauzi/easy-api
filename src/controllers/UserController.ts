@@ -38,7 +38,9 @@ export default class UserController {
     public async user(req: Request, res: Response) {
         try {
             const { id } = req.params;
-            const withBlogs = ['true', '1'].includes(req.params.with_blogs);
+            const withBlogs = ['true', '1'].includes(
+                <string>req.query.with_blogs
+            );
             const user = await this.userRepository.getUser({
                 where: {
                     id,
