@@ -2,7 +2,7 @@ import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
 import { FindOneOptions } from 'typeorm';
 
-export default class AuthRepository {
+export default class UserRepository {
     public getUser(options: FindOneOptions): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {

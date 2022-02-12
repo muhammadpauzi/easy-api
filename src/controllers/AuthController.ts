@@ -12,21 +12,21 @@ import ApiResponse from '../helpers/ApiResponse';
 import Error from '../helpers/Error';
 import StringHelper from '../helpers/StringHelper';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
-import AuthRepository from '../repositories/AuthRepository';
 import { Secret, sign } from 'jsonwebtoken';
+import UserRepository from '../repositories/UserRepository';
 
 export default class AuthController {
-    private authRepository: AuthRepository;
+    private userRepository: UserRepository;
 
     constructor() {
-        this.authRepository = new AuthRepository();
+        this.userRepository = new UserRepository();
     }
 
     public async user(req: IGetUserAuthInfoRequest, res: Response) {
         try {
             const { id } = req.user;
             const { password, sessionId, ...user } =
-                await this.authRepository.getUserById(id);
+                await this.userRepository.getUserById(id);
             return ApiResponse.successResponse(res, { data: user });
         } catch (error) {
             return Error.handleError(res, error);
@@ -36,7 +36,7 @@ export default class AuthController {
     public async login(req: Request, res: Response) {
         try {
             const { username, password } = req.body;
-            let user = await this.authRepository.getUserByUsername(username);
+            let user = await this.userRepository.getUserByUsername(username);
             console.log(user);
             const isSame = user
                 ? await compare(password, user.password)
@@ -50,7 +50,7 @@ export default class AuthController {
 
             // for securing jwt -> pzn video php jwt ngobar
             const sessionId = await StringHelper.getRandomKey();
-            user = await this.authRepository.updateSessionIdBy(
+            user = await this.userRepository.updateSessionIdBy(
                 { where: { username: user.username } },
                 sessionId
             );
@@ -83,7 +83,7 @@ export default class AuthController {
     public async register(req: Request, res: Response) {
         try {
             const { username, name, password, email } = req.body;
-            let user = await this.authRepository.getUser({
+            let user = await this.userRepository.getUser({
                 where: [
                     {
                         username,
@@ -99,7 +99,7 @@ export default class AuthController {
                     message: USER_ALREADY_EXISTS,
                 });
 
-            const createdUser = await this.authRepository.createUser({
+            const createdUser = await this.userRepository.createUser({
                 username,
                 name,
                 email,
@@ -124,7 +124,7 @@ export default class AuthController {
         try {
             const { id } = req.user;
             // reset sessionId of the user
-            await this.authRepository.updateSessionIdBy(
+            await this.userRepository.updateSessionIdBy(
                 { where: { id: Number(id) } },
                 null
             );
