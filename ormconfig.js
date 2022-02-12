@@ -19,7 +19,7 @@ let configs = {
         : process.env.DATABASE_NAME,
 
     synchronize: true,
-    logging: true,
+    logging: false,
     entities: ['src/entities/**/*.ts', 'dist/entities/**/*.js'],
     subscribers: ['src/subscribers/**/*.ts', 'dist/subscribers/**/*.js'],
     migrations: ['src/migrations/**/*.ts', 'dist/migrations/**/*.js'],
