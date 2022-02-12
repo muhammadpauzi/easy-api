@@ -1,7 +1,9 @@
-# Awesome Project Build with TypeORM
+# **Easy API**
 
-Steps to run this project:
+**Built With :**
 
-1. Run `npm i` command
-2. Setup database settings inside `ormconfig.json` file
-3. Run `npm start` command
+-   Express
+-   TypeScript
+-   TypeORM
+-   MySQL
+-   And More...
