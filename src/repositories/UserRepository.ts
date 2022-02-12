@@ -1,8 +1,23 @@
 import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
-import { FindOneOptions } from 'typeorm';
+import { FindManyOptions, FindOneOptions } from 'typeorm';
 
 export default class UserRepository {
+    public getUsers(options: FindManyOptions): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const users = await User.find(options);
+                resolve(users);
+            } catch ({ code, message }) {
+                reject({
+                    code: code,
+                    statusCode: SERVER_ERROR_CODE,
+                    message,
+                });
+            }
+        });
+    }
+
     public getUser(options: FindOneOptions): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {

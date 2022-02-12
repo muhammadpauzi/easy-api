@@ -22,12 +22,34 @@ export default class UserController {
         this.userRepository = new UserRepository();
     }
 
-    public async user(req: IGetUserAuthInfoRequest, res: Response) {
+    public async users(req: Request, res: Response) {
         try {
-            const { id } = req.user;
             const { password, sessionId, ...user } =
-                await this.userRepository.getUserById(id);
+                await this.userRepository.getUsers({
+                    order: {
+                        createdAt: 'DESC',
+                    },
+                });
             return ApiResponse.successResponse(res, { data: user });
+        } catch (error) {
+            return Error.handleError(res, error);
+        }
+    }
+
+    public async user(req: Request, res: Response) {
+        try {
+            const { id } = req.params;
+            const withBlogs = ['true', '1'].includes(req.params.with_blogs);
+            const users = await this.userRepository.getUser({
+                where: {
+                    id,
+                },
+                relations: withBlogs ? ['blogs'] : [],
+                order: {
+                    createdAt: 'DESC',
+                },
+            });
+            return ApiResponse.successResponse(res, { data: users });
         } catch (error) {
             return Error.handleError(res, error);
         }
