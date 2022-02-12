@@ -55,7 +55,7 @@ export default class User extends BaseModel {
     }
 
     public toJSON() {
-        const { password, ...data } = this;
+        const { password, sessionId, ...data } = this;
         return data;
     }
 }

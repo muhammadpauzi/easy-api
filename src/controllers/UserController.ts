@@ -24,13 +24,12 @@ export default class UserController {
 
     public async users(req: Request, res: Response) {
         try {
-            const { password, sessionId, ...user } =
-                await this.userRepository.getUsers({
-                    order: {
-                        createdAt: 'DESC',
-                    },
-                });
-            return ApiResponse.successResponse(res, { data: user });
+            const users = await this.userRepository.getUsers({
+                order: {
+                    createdAt: 'DESC',
+                },
+            });
+            return ApiResponse.successResponse(res, { data: users });
         } catch (error) {
             return Error.handleError(res, error);
         }
@@ -40,7 +39,7 @@ export default class UserController {
         try {
             const { id } = req.params;
             const withBlogs = ['true', '1'].includes(req.params.with_blogs);
-            const users = await this.userRepository.getUser({
+            const user = await this.userRepository.getUser({
                 where: {
                     id,
                 },
@@ -49,7 +48,7 @@ export default class UserController {
                     createdAt: 'DESC',
                 },
             });
-            return ApiResponse.successResponse(res, { data: users });
+            return ApiResponse.successResponse(res, { data: user });
         } catch (error) {
             return Error.handleError(res, error);
         }
