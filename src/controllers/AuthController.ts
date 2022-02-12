@@ -37,7 +37,6 @@ export default class AuthController {
         try {
             const { username, password } = req.body;
             let user = await this.userRepository.getUserByUsername(username);
-            console.log(user);
             const isSame = user
                 ? await compare(password, user.password)
                 : false;

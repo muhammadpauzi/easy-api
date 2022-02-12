@@ -12,6 +12,7 @@ import {
 import ValidationHelper from '../helpers/ValidationHelper';
 import { VALIDATION_ERROR_MESSAGES } from '../constants/messages';
 import Blog from './Blog';
+import Like from './Like';
 
 @Entity({ name: 'users' })
 export default class User extends BaseModel {
@@ -47,6 +48,9 @@ export default class User extends BaseModel {
 
     @OneToMany(() => Blog, (blog) => blog.user)
     blogs!: Blog[];
+
+    @OneToMany(() => Like, (like) => like.user)
+    likes!: Like[];
 
     @BeforeInsert()
     public async hashPassword() {
