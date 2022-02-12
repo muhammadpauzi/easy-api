@@ -34,3 +34,8 @@ export const BLOG_MESSAGES = {
     blogCreated: 'Blog has been successfully created',
     blogUpdated: 'Blog has been successfully updated',
 };
+
+export const BLOG_LIKE_MESSAGES = {
+    blogLiked: 'You successfully to like this blog post',
+    blogUnliked: 'You successfully to unlike this blog post',
+};

@@ -1,11 +1,10 @@
-import { BeforeInsert, Column, Entity, ManyToOne } from 'typeorm';
+import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import BaseModel from './BaseModel';
-import { IsNotEmpty, Length, MaxLength } from 'class-validator';
+import { IsNotEmpty, Length } from 'class-validator';
 import slugify from 'slugify';
-import ValidationHelper from '../helpers/ValidationHelper';
-import { VALIDATION_ERROR_MESSAGES } from '../constants/messages';
 import StringHelper from '../helpers/StringHelper';
 import User from './User';
+import Like from './Like';
 
 @Entity({ name: 'blogs' })
 export default class Blog extends BaseModel {
@@ -30,6 +29,9 @@ export default class Blog extends BaseModel {
         createForeignKeyConstraints: false,
     })
     user!: User;
+
+    @OneToMany(() => Like, (like) => like.blog)
+    likes!: Like[];
 
     @BeforeInsert()
     public async generateSlug() {

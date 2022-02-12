@@ -12,7 +12,7 @@ export default class BlogRepository {
         return new Promise(async (resolve, reject) => {
             try {
                 const blogs = await Blog.find({
-                    relations: ['user'],
+                    relations: ['user', 'likes'],
                     order: {
                         createdAt: 'DESC',
                     },
@@ -29,7 +29,7 @@ export default class BlogRepository {
             try {
                 const blog = await Blog.findOne({
                     where: { id },
-                    relations: ['user'],
+                    relations: ['user', 'likes'],
                 });
 
                 if (!blog)
