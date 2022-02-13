@@ -14,12 +14,15 @@ import StringHelper from '../helpers/StringHelper';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
 import { Secret, sign } from 'jsonwebtoken';
 import UserRepository from '../repositories/UserRepository';
+import UserProfileRepository from '../repositories/UserProfileRepository';
 
 export default class AuthController {
     private userRepository: UserRepository;
+    private userProfileRepository: UserProfileRepository;
 
     constructor() {
         this.userRepository = new UserRepository();
+        this.userProfileRepository = new UserProfileRepository();
     }
 
     public async user(req: IGetUserAuthInfoRequest, res: Response) {
@@ -50,7 +53,9 @@ export default class AuthController {
             // for securing jwt -> pzn video php jwt ngobar
             const sessionId = await StringHelper.getRandomKey();
             user = await this.userRepository.updateSessionIdBy(
-                { where: { username: user.username } },
+                {
+                    where: { username: user.username },
+                },
                 sessionId
             );
 
@@ -72,6 +77,9 @@ export default class AuthController {
                 user: {
                     id: user.id,
                     username: user.username,
+                    name: user.name,
+                    email: user.email,
+                    userProfile: user.userProfile,
                 },
             });
         } catch (error) {
@@ -104,6 +112,10 @@ export default class AuthController {
                 email,
                 password,
             });
+            const createdUserProfile =
+                await this.userProfileRepository.createUserProfile(
+                    createdUser.id
+                );
 
             return ApiResponse.successCreatedResponse(res, {
                 message: USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,

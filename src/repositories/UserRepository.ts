@@ -1,6 +1,7 @@
 import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
+import IUserProfile from '../interfaces/IUserProfile';
 
 export default class UserRepository {
     public getUsers(options: FindManyOptions): Promise<any> {
@@ -40,6 +41,7 @@ export default class UserRepository {
                     where: {
                         id,
                     },
+                    relations: ['userProfile'],
                 });
                 resolve(user);
             } catch (error) {
@@ -56,6 +58,7 @@ export default class UserRepository {
                     where: {
                         username,
                     },
+                    relations: ['userProfile'],
                 });
                 resolve(user);
             } catch (error) {

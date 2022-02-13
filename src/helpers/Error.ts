@@ -16,7 +16,7 @@ export default class Error {
         if (error.statusCode) statusCode = error.statusCode;
         const { code, message } = error;
         return ApiResponse.errorResponse(res, statusCode, {
-            errorCode: code || statusCode,
+            errorCode: code ? code : statusCode,
             statusCode,
             message,
         });

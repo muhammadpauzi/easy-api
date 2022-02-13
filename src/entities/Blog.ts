@@ -1,4 +1,11 @@
-import { BeforeInsert, Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import {
+    BeforeInsert,
+    BeforeUpdate,
+    Column,
+    Entity,
+    ManyToOne,
+    OneToMany,
+} from 'typeorm';
 import BaseModel from './BaseModel';
 import { IsNotEmpty, Length } from 'class-validator';
 import slugify from 'slugify';
@@ -43,6 +50,12 @@ export default class Blog extends BaseModel {
 
     @BeforeInsert()
     public async beforeInsert() {
+        await this.generateSlug();
+        this.sanitizeHtml();
+    }
+
+    @BeforeUpdate()
+    public async beforeUpdate() {
         await this.generateSlug();
         this.sanitizeHtml();
     }

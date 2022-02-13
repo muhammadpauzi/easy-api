@@ -9,6 +9,7 @@ import authRouter from './routes/auth';
 import usersRouter from './routes/users';
 import blogsRouter from './routes/blogs';
 import blogLikesRouter from './routes/blogLikes';
+import userProfileRouter from './routes/userProfile';
 
 const app = new App();
 
@@ -19,6 +20,7 @@ app.registerMiddleware(express.json({ limit: '10mb' }))
     .registerRoute('/auth', authRouter)
     .registerRoute('/blogs', blogsRouter)
     .registerRoute('/blogs', blogLikesRouter)
+    .registerRoute('/profile', userProfileRouter)
     .run(5000, (port: number) => {
         console.log('Database connected!');
         console.log(`Server is running at http://127.0.0.1:${port}`);

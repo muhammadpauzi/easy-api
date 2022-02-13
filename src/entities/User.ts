@@ -1,4 +1,11 @@
-import { BeforeInsert, Column, Entity, OneToMany } from 'typeorm';
+import {
+    BeforeInsert,
+    Column,
+    Entity,
+    JoinColumn,
+    OneToMany,
+    OneToOne,
+} from 'typeorm';
 import BaseModel from './BaseModel';
 import { genSalt, hash } from 'bcrypt';
 import {
@@ -13,6 +20,7 @@ import ValidationHelper from '../helpers/ValidationHelper';
 import { VALIDATION_ERROR_MESSAGES } from '../constants/messages';
 import Blog from './Blog';
 import Like from './Like';
+import UserProfile from './UserProfile';
 
 @Entity({ name: 'users' })
 export default class User extends BaseModel {
@@ -51,6 +59,13 @@ export default class User extends BaseModel {
 
     @OneToMany(() => Like, (like) => like.user)
     likes!: Like[];
+
+    @OneToOne(() => UserProfile, (userProfile) => userProfile.user, {
+        onDelete: 'CASCADE',
+        createForeignKeyConstraints: false,
+    })
+    @JoinColumn()
+    userProfile!: UserProfile;
 
     @BeforeInsert()
     public async hashPassword() {

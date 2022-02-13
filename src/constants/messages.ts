@@ -35,6 +35,10 @@ export const BLOG_MESSAGES = {
     blogUpdated: 'Blog has been successfully updated',
 };
 
+export const USER_MESSAGES = {
+    userProfileUpdated: 'User profile has been successfully updated',
+};
+
 export const BLOG_LIKE_MESSAGES = {
     blogLiked: 'You successfully to like this blog post',
     blogUnliked: 'You successfully to unlike this blog post',
