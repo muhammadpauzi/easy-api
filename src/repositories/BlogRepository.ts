@@ -49,8 +49,8 @@ export default class BlogRepository {
     public createBlog(data: any): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                const { title, body, userId } = data;
-                let blog = await Blog.create({ title, body, userId });
+                const { title, markdown, userId } = data;
+                let blog = await Blog.create({ title, markdown, userId });
                 blog = await blog.save();
                 resolve(blog);
             } catch ({ code, message }) {
@@ -75,7 +75,7 @@ export default class BlogRepository {
                     });
 
                 blog.title = data.title || blog.title;
-                blog.body = data.body || blog.body;
+                blog.markdown = data.markdown || blog.markdown;
                 blog = await blog.save();
                 resolve(blog);
             } catch (error) {

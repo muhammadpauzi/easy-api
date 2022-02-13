@@ -5,6 +5,11 @@ import slugify from 'slugify';
 import StringHelper from '../helpers/StringHelper';
 import User from './User';
 import Like from './Like';
+import { JSDOM } from 'jsdom';
+import createDomPurify from 'dompurify';
+const window: any = new JSDOM('').window;
+const dompurify = createDomPurify(window);
+import { marked } from 'marked';
 
 @Entity({ name: 'blogs' })
 export default class Blog extends BaseModel {
@@ -17,9 +22,12 @@ export default class Blog extends BaseModel {
     slug!: string;
 
     @IsNotEmpty()
-    @Length(50, 10000)
+    @Length(50, 50000)
     @Column({ type: 'text', nullable: false })
-    body!: string;
+    markdown!: string;
+
+    @Column({ type: 'text', nullable: false })
+    sanitizedHtml!: string;
 
     @Column()
     userId!: number;
@@ -34,6 +42,11 @@ export default class Blog extends BaseModel {
     likes!: Like[];
 
     @BeforeInsert()
+    public async beforeInsert() {
+        await this.generateSlug();
+        this.sanitizeHtml();
+    }
+
     public async generateSlug() {
         let slug = await slugify(this.title, {
             lower: true,
@@ -41,5 +54,9 @@ export default class Blog extends BaseModel {
         const isExists = await Blog.findOne({ where: { slug } });
         if (isExists) slug = slug + (await StringHelper.getRandomKey(2, 'hex'));
         this.slug = slug;
+    }
+
+    public sanitizeHtml() {
+        this.sanitizedHtml = dompurify.sanitize(marked(this.markdown));
     }
 }
