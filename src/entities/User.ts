@@ -13,7 +13,6 @@ import {
     IsNotEmpty,
     Length,
     Matches,
-    Max,
     MaxLength,
 } from 'class-validator';
 import ValidationHelper from '../helpers/ValidationHelper';
@@ -50,6 +49,14 @@ export default class User extends BaseModel {
     @Length(5, 255)
     @Column({ type: 'varchar', length: 255, nullable: false })
     password!: string;
+
+    @Column({
+        type: 'varchar',
+        length: 512,
+        nullable: false,
+        default: 'default.jpg',
+    })
+    photo!: string;
 
     @Column({ type: 'varchar', length: 50, nullable: true })
     sessionId!: string | null;

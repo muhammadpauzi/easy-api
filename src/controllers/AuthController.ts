@@ -116,6 +116,11 @@ export default class AuthController {
                 await this.userProfileRepository.createUserProfile(
                     createdUser.id
                 );
+            let registeredUser = await this.userRepository.getUserById(
+                createdUser.id
+            );
+            registeredUser.userProfileId = createdUserProfile.id;
+            registeredUser = registeredUser.save();
 
             return ApiResponse.successCreatedResponse(res, {
                 message: USER_HAS_BEEN_SUCCESSFULLY_REGISTERED,

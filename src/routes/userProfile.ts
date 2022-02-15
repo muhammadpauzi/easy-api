@@ -30,4 +30,14 @@ router.put(
         )
 );
 
+router.post(
+    '/photo',
+    (req, ...args) => verifyJwtToken(<IGetUserAuthInfoRequest>req, ...args),
+    (req, res) =>
+        userProfileController.uploadAndUpdateUserPhotoProfile(
+            <IGetUserAuthInfoRequest>req,
+            res
+        )
+);
+
 export default router;

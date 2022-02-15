@@ -35,6 +35,15 @@ export const BLOG_MESSAGES = {
     blogUpdated: 'Blog has been successfully updated',
 };
 
+export const UPLOAD_MESSAGES = {
+    fileNotAllowed:
+        'Only image (jpg, jpeg, png, gif) files are allowed to be uploaded.',
+    limitFileSize: 'File size cannot be larger than 2MB!',
+    couldNotUpload: 'Could not upload the file.',
+    fileSuccessfullyUploaded: 'The file uploaded successfully.',
+    fileRequired: 'Please upload a file!',
+};
+
 export const USER_MESSAGES = {
     userProfileUpdated: 'User profile has been successfully updated',
 };
