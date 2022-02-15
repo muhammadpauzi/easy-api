@@ -1,7 +1,18 @@
 import { Request, Response } from 'express';
-import { BLOG_MESSAGES } from '../constants/messages';
+import {
+    maxThumbnailSize,
+    uploadedThumbnailProfilePath,
+} from '../constants/configs';
+import { FILE_NOT_ALLOWED, LIMIT_FILE_SIZE } from '../constants/errorCodes';
+import {
+    BLOG_MESSAGES,
+    SOMETHING_WENT_WRONG,
+    UPLOAD_MESSAGES,
+} from '../constants/messages';
+import { CLIENT_ERROR_CODE, SERVER_ERROR_CODE } from '../constants/statusCode';
 import ApiResponse from '../helpers/ApiResponse';
 import Error from '../helpers/Error';
+import Upload from '../helpers/Upload';
 import { IGetUserAuthInfoRequest } from '../interfaces/IGetUserAuthInfoRequest';
 import BlogRepository from '../repositories/BlogRepository';
 
@@ -33,6 +44,59 @@ export default class BlogController {
         } catch (error) {
             return Error.handleError(res, error);
         }
+    }
+
+    public async uploadAndUpdateThumbailBlog(
+        req: IGetUserAuthInfoRequest,
+        res: Response
+    ) {
+        const storage = Upload.getDiskStorageMulter(
+            uploadedThumbnailProfilePath
+        );
+        const upload = Upload.uploadFile(storage, maxThumbnailSize);
+        upload(req, res, async (err: any) => {
+            // errors handling
+            if (err) {
+                if (err.code == LIMIT_FILE_SIZE) {
+                    return ApiResponse.errorResponse(res, CLIENT_ERROR_CODE, {
+                        message: SOMETHING_WENT_WRONG,
+                        errors: [UPLOAD_MESSAGES.limitFileSize],
+                    });
+                }
+
+                if (err.code == FILE_NOT_ALLOWED) {
+                    return ApiResponse.errorResponse(res, CLIENT_ERROR_CODE, {
+                        message: '',
+                    });
+                }
+
+                return ApiResponse.errorResponse(res, SERVER_ERROR_CODE, {
+                    message: UPLOAD_MESSAGES.couldNotUpload,
+                });
+            }
+
+            // if file doesn't exists or doesn't sent
+            if (req.file === undefined) {
+                return ApiResponse.errorResponse(res, CLIENT_ERROR_CODE, {
+                    message: UPLOAD_MESSAGES.fileRequired,
+                });
+            }
+            try {
+                const { id: userId } = req.user;
+                const { id: blogId } = req.params;
+                await this.blogRepository.updateThumbnail(
+                    req.file.filename,
+                    blogId,
+                    userId
+                );
+            } catch (error) {
+                return Error.handleError(res, error);
+            }
+
+            return ApiResponse.successResponse(res, {
+                message: UPLOAD_MESSAGES.fileSuccessfullyUploaded,
+            });
+        });
     }
 
     public async create(req: IGetUserAuthInfoRequest, res: Response) {

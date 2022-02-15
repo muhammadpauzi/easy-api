@@ -3,9 +3,9 @@ import BaseModel from './BaseModel';
 import { IsUrl, ValidateIf } from 'class-validator';
 import User from './User';
 
-@Entity()
+@Entity({ name: 'user_profiles' })
 export default class UserProfile extends BaseModel {
-    @ValidateIf((o) => o.facebook)
+    @ValidateIf((o) => o.facebook) // validate this field if the request field/data is not empty
     @IsUrl()
     @Column({ type: 'varchar', length: 1024, nullable: true })
     facebook!: string;

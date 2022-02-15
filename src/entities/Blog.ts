@@ -36,6 +36,13 @@ export default class Blog extends BaseModel {
     @Column({ type: 'text', nullable: false })
     sanitizedHtml!: string;
 
+    @Column({
+        type: 'varchar',
+        length: 512,
+        nullable: true,
+    })
+    thumbnail!: string;
+
     @Column()
     userId!: number;
 

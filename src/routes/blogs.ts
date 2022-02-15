@@ -19,6 +19,16 @@ router.post(
     (req, ...args) => verifyJwtToken(<IGetUserAuthInfoRequest>req, ...args),
     (req, res) => blogController.create(<IGetUserAuthInfoRequest>req, res)
 );
+router.post(
+    '/:id/thumbnail',
+    (req, ...args) =>
+        verifyJwtToken(<IGetUserAuthInfoRequest>(<unknown>req), ...args),
+    (req, res) =>
+        blogController.uploadAndUpdateThumbailBlog(
+            <IGetUserAuthInfoRequest>(<unknown>req),
+            res
+        )
+);
 router.get('/:id', (req, res) => blogController.blog(req, res));
 router.put(
     '/:id',

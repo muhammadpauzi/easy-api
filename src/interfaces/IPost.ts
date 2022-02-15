@@ -5,4 +5,5 @@ export default interface IPost {
     sanitizedHtml: string;
     slug: string;
     userId: string | number;
+    thumbnail: string;
 }

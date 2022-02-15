@@ -41,7 +41,7 @@ export default class UserProfileController {
         const storage = Upload.getDiskStorageMulter(uploadedPhotoProfilePath);
         const upload = Upload.uploadFile(storage, maxPhotoSize);
         const { id: userId } = req.user;
-        upload(req, res, (err: any) => {
+        upload(req, res, async (err: any) => {
             // errors handling
             if (err) {
                 if (err.code == LIMIT_FILE_SIZE) {
@@ -69,7 +69,7 @@ export default class UserProfileController {
                 });
             }
             try {
-                this.userRepository.updatePhotoProfile(
+                await this.userRepository.updatePhotoProfile(
                     req.file.filename,
                     userId
                 );

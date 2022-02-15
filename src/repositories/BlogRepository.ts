@@ -50,7 +50,11 @@ export default class BlogRepository {
         return new Promise(async (resolve, reject) => {
             try {
                 const { title, markdown, userId } = data;
-                let blog = await Blog.create({ title, markdown, userId });
+                let blog = await Blog.create({
+                    title,
+                    markdown,
+                    userId,
+                });
                 blog = await blog.save();
                 resolve(blog);
             } catch ({ code, message }) {
@@ -59,6 +63,30 @@ export default class BlogRepository {
                     statusCode: SERVER_ERROR_CODE,
                     message,
                 });
+            }
+        });
+    }
+
+    public updateThumbnail(
+        filename: string,
+        blogId: string | number,
+        userId: string | number
+    ) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let blog = await this.getBlogWithUserById(blogId);
+                if (blog.userId != userId)
+                    return reject({
+                        code: FORBIDDEN_CODE,
+                        statusCode: FORBIDDEN_CODE,
+                        message: AUTH_MESSAGES.dontHavePermission,
+                    });
+
+                blog.thumbnail = filename || blog.thumbnail;
+                blog = await blog.save();
+                resolve(blog);
+            } catch (error) {
+                reject(error);
             }
         });
     }
