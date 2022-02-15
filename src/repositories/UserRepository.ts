@@ -1,6 +1,7 @@
 import { SERVER_ERROR_CODE } from '../constants/statusCode';
 import User from '../entities/User';
 import { FindManyOptions, FindOneOptions } from 'typeorm';
+import IUserProfile from '../interfaces/IUserProfile';
 
 export default class UserRepository {
     public getUsers(options: FindManyOptions): Promise<any> {
@@ -59,6 +60,32 @@ export default class UserRepository {
                     },
                     relations: ['userProfile'],
                 });
+                resolve(user);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+    public updateUserProfile(
+        data: IUserProfile,
+        userId: string | number
+    ): Promise<any> {
+        return new Promise(async (resolve, reject) => {
+            try {
+                let user = await this.getUserById(userId);
+
+                user.userProfile.facebook =
+                    data.facebook || user.userProfile.facebook;
+                user.userProfile.instagram =
+                    data.instagram || user.userProfile.instagram;
+                user.userProfile.github =
+                    data.github || user.userProfile.github;
+                user.userProfile.twitter =
+                    data.twitter || user.userProfile.twitter;
+                user.userProfile.bio = data.bio || user.userProfile.bio;
+
+                user.userProfile = await user.userProfile.save();
                 resolve(user);
             } catch (error) {
                 reject(error);

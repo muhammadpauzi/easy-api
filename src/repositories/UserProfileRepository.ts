@@ -19,12 +19,10 @@ export default class UserProfileRepository {
         });
     }
 
-    public createUserProfile(userId: number): Promise<any> {
+    public createUserProfile(): Promise<any> {
         return new Promise(async (resolve, reject) => {
             try {
-                let userProfile = await UserProfile.create({
-                    userId,
-                });
+                let userProfile = await UserProfile.create({});
                 userProfile = await userProfile.save();
                 resolve(userProfile);
             } catch ({ code, message }) {
@@ -48,28 +46,6 @@ export default class UserProfileRepository {
                 resolve(userProfile);
             } catch (error) {
                 // this error from this.getUser()
-                reject(error);
-            }
-        });
-    }
-
-    public updateUserProfile(
-        data: IUserProfile,
-        userId: string | number
-    ): Promise<any> {
-        return new Promise(async (resolve, reject) => {
-            try {
-                let userProfile = await this.getUserProfileById(userId);
-
-                userProfile.facebook = data.facebook || userProfile.facebook;
-                userProfile.instagram = data.instagram || userProfile.instagram;
-                userProfile.github = data.github || userProfile.github;
-                userProfile.twitter = data.twitter || userProfile.twitter;
-                userProfile.bio = data.bio || userProfile.bio;
-
-                userProfile = await userProfile.save();
-                resolve(userProfile);
-            } catch (error) {
                 reject(error);
             }
         });

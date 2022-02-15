@@ -26,8 +26,9 @@ export default class UserProfileController {
     public async userProfile(req: IGetUserAuthInfoRequest, res: Response) {
         try {
             const { id: userId } = req.user;
-            const userProfile =
-                await this.userProfileRepository.getUserProfileById(userId);
+            const { userProfile } = await this.userRepository.getUserById(
+                userId
+            );
             return ApiResponse.successResponse(res, { data: userProfile });
         } catch (error) {
             return Error.handleError(res, error);
@@ -89,11 +90,8 @@ export default class UserProfileController {
     ) {
         try {
             const { id: userId } = req.user;
-            const updatedUserProfile =
-                await this.userProfileRepository.updateUserProfile(
-                    req.body,
-                    userId
-                );
+            const { userProfile: updatedUserProfile } =
+                await this.userRepository.updateUserProfile(req.body, userId);
             return ApiResponse.successResponse(res, {
                 message: USER_MESSAGES.userProfileUpdated,
                 data: updatedUserProfile,

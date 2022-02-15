@@ -28,9 +28,6 @@ export default class UserProfile extends BaseModel {
     @Column({ type: 'text', nullable: true })
     bio!: string;
 
-    @Column()
-    userId!: number;
-
     @OneToOne(() => User, (user) => user.userProfile)
     user!: User;
 }
