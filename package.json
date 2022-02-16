@@ -5,7 +5,7 @@
    "author": "Muhammad Pauzi",
    "license": "MIT",
    "scripts": {
-      "start": "ts-node src/index.ts",
+      "start": "node build/server.js",
       "ts:build": "tsc",
       "ts:dev": "nodemon --exec ts-node src/server.ts",
       "ts:start": "ts-node src/server.ts",
