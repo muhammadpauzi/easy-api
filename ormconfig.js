@@ -20,9 +20,13 @@ let configs = {
 
     synchronize: true,
     logging: false,
-    entities: ['src/entities/**/*.ts', 'dist/entities/**/*.js'],
-    subscribers: ['src/subscribers/**/*.ts', 'dist/subscribers/**/*.js'],
-    migrations: ['src/migrations/**/*.ts', 'dist/migrations/**/*.js'],
+    entities: isDev() ? ['src/entities/**/*.ts'] : ['build/entities/**/*.js'],
+    subscribers: isDev()
+        ? ['src/subscribers/**/*.ts']
+        : ['build/subscribers/**/*.js'],
+    migrations: isDev()
+        ? ['src/migrations/**/*.ts']
+        : ['build/migrations/**/*.js'],
     cli: {
         entitiesDir: 'src/entities',
         migrationsDir: 'src/migrations',
