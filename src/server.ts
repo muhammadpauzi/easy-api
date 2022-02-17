@@ -4,7 +4,7 @@ import App from './App';
 import 'reflect-metadata';
 import express from 'express';
 import cookieParser from 'cookie-parser';
-
+import cors from 'cors';
 import authRouter from './routes/auth';
 import usersRouter from './routes/users';
 import blogsRouter from './routes/blogs';
@@ -14,7 +14,13 @@ import { join } from 'path';
 
 const app = new App();
 
-app.registerMiddleware(express.json({ limit: '10mb' }))
+app.registerMiddleware(
+    cors({
+        origin: ['http://localhost:3000'],
+        credentials: true,
+    })
+)
+    .registerMiddleware(express.json({ limit: '10mb' }))
     .registerMiddleware(express.static(join(__dirname, '../', '/public')))
     .registerMiddleware(express.urlencoded({ extended: true, limit: '10mb' }))
     .registerMiddleware(cookieParser(process.env.COOKIE_PARSER_SECRET_KEY))
